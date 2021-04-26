@@ -2,12 +2,22 @@ export class Vector {
   #items: any[] = [];
   #capacity: number = 16;
 
+  #setCapacity = (initializedCapacity: number, actualCapacity: number) => {
+    let res = actualCapacity;
+
+    while (res < initializedCapacity) res *= 2;
+
+    this.#capacity = res;
+  };
+
   constructor(...items: any[]) {
     if (items.length === 1 && items[0] > this.#capacity) {
-      this.#capacity = items[0];
+      this.#setCapacity(items[0], this.#capacity);
     }
 
-    if (items.length > this.#capacity) this.#capacity = items.length * 2;
+    if (items.length > this.#capacity) {
+      this.#setCapacity(items.length, this.#capacity);
+    }
 
     if (items.length > 1) this.#items = items;
   }
@@ -28,6 +38,12 @@ export class Vector {
     for (const [idx, item] of Object.entries(this.#items)) {
       if (index === +idx) return item;
     }
+
+    throw new Error("Out of bounds");
+  }
+
+  push(item: any) {
+    this.#items[this.#items.length] = item;
   }
 
   isEmpty() {
