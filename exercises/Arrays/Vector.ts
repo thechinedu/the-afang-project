@@ -44,6 +44,29 @@ export class Vector {
 
   push(item: any) {
     this.#items[this.#items.length] = item;
+
+    if (this.#items.length > this.#capacity) {
+      this.#setCapacity(this.#items.length, this.#capacity);
+    }
+  }
+
+  insert(index: number, item: any) {
+    let shiftValue = null;
+
+    for (let i = index; i < this.#items.length + 1; i += 1) {
+      if (i === index) {
+        shiftValue = this.#items[i];
+        this.#items[i] = item;
+        continue;
+      }
+
+      if (shiftValue) {
+        let temp = this.#items[i];
+        this.#items[i] = shiftValue;
+
+        shiftValue = temp;
+      }
+    }
   }
 
   isEmpty() {

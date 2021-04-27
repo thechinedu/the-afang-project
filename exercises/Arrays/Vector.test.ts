@@ -49,23 +49,23 @@ describe("Vector", () => {
     });
 
     it("returns false if the vector contains items", () => {
-      expect(new Vector(10, 20, 30).isEmpty()).toBe(false);
+      expect(new Vector(1, 2, 3).isEmpty()).toBe(false);
     });
   });
 
   describe("#at", () => {
     it("returns the item at a specific index", () => {
-      const vec = new Vector(10, 20, 30, 40, 50);
+      const vec = new Vector(1, 2, 3, 4, 5);
 
-      expect(vec.at(0)).toBe(10);
-      expect(vec.at(1)).toBe(20);
-      expect(vec.at(2)).toBe(30);
-      expect(vec.at(3)).toBe(40);
-      expect(vec.at(4)).toBe(50);
+      expect(vec.at(0)).toBe(1);
+      expect(vec.at(1)).toBe(2);
+      expect(vec.at(2)).toBe(3);
+      expect(vec.at(3)).toBe(4);
+      expect(vec.at(4)).toBe(5);
     });
 
     it("throws an out of bounds error if the specified index is greater than the size of the vector", () => {
-      const vec = new Vector(10, 20, 30, 40, 50);
+      const vec = new Vector(1, 2, 3, 4, 5);
 
       expect(() => vec.at(5)).toThrow("Out of bounds");
     });
@@ -73,16 +73,55 @@ describe("Vector", () => {
 
   describe("#push", () => {
     it("adds a new item to the end of the vector", () => {
-      const vec = new Vector(10, 20, 30, 40, 50);
+      const vec = new Vector(1, 2, 3, 4, 5);
 
       expect(vec.size).toBe(5);
 
-      vec.push(60);
+      vec.push(6);
 
       expect(vec.size).toBe(6);
-      expect(vec.at(5)).toBe(60);
+      expect(vec.at(5)).toBe(6);
     });
 
-    it("increases the capacity of the vector when the vector has reached max capacity", () => {});
+    it("increases the capacity of the vector when the vector has reached max capacity", () => {
+      const vec = new Vector(
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      );
+
+      vec.push(17);
+
+      expect(vec.size).toBe(17);
+      expect(vec.at(16)).toBe(17);
+      expect(vec.capacity).toBe(32);
+    });
+  });
+
+  describe("#insert", () => {
+    it("inserts a new item at the given index and shifts other items to the right", () => {
+      const vec = new Vector(1, 2, 3, 4, 5);
+
+      expect(vec.at(2)).toBe(3);
+
+      vec.insert(2, 2.5);
+
+      expect(vec.size).toBe(6);
+      expect(vec.at(2)).toBe(2.5);
+      expect(vec.toString()).toBe("[1,2,2.5,3,4,5]");
+    });
   });
 });
