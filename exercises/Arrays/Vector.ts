@@ -1,14 +1,7 @@
 export class Vector {
   #items: any[] = [];
   #capacity: number = 16;
-
-  #setCapacity = (initializedCapacity: number, actualCapacity: number) => {
-    let res = actualCapacity;
-
-    while (res < initializedCapacity) res *= 2;
-
-    this.#capacity = res;
-  };
+  size = this.#items.length;
 
   constructor(...items: any[]) {
     if (items.length === 1 && items[0] > this.#capacity) {
@@ -22,9 +15,9 @@ export class Vector {
     if (items.length > 1) this.#items = items;
   }
 
-  get size() {
-    return this.#items.length;
-  }
+  // get size() {
+  //   return this.#items.length;
+  // }
 
   get items() {
     return this.#items;
@@ -42,18 +35,14 @@ export class Vector {
     throw new Error("Out of bounds");
   }
 
-  push(item: any) {
-    this.#items[this.#items.length] = item;
-
-    if (this.#items.length > this.#capacity) {
-      this.#setCapacity(this.#items.length, this.#capacity);
-    }
-  }
-
   insert(index: number, item: any) {
+    if (index > this.#items.length) {
+      throw new Error("Out of bounds");
+    }
+
     let shiftValue = null;
 
-    for (let i = index; i < this.#items.length + 1; i += 1) {
+    for (let i = index; i <= this.#items.length; i += 1) {
       if (i === index) {
         shiftValue = this.#items[i];
         this.#items[i] = item;
@@ -67,13 +56,39 @@ export class Vector {
         shiftValue = temp;
       }
     }
+
+    this.size += 1;
+  }
+
+  push(item: any) {
+    this.insert(this.#items.length, item);
+    this.#increaseCapacity();
+  }
+
+  prepend(item: any) {
+    this.insert(0, item);
+    this.#increaseCapacity();
   }
 
   isEmpty() {
-    return !this.size;
+    return this.size === 0;
   }
 
   toString() {
     return JSON.stringify(this.#items);
+  }
+
+  #setCapacity(initializedCapacity: number, actualCapacity: number) {
+    let res = actualCapacity;
+
+    while (res < initializedCapacity) res *= 2;
+
+    this.#capacity = res;
+  }
+
+  #increaseCapacity() {
+    if (this.size > this.#capacity) {
+      this.#setCapacity(this.size, this.#capacity);
+    }
   }
 }
