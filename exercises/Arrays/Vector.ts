@@ -1,7 +1,7 @@
 export class Vector {
   #items: any[] = [];
   #capacity: number = 16;
-  size = this.#items.length;
+  #size: number;
 
   constructor(...items: any[]) {
     if (items.length === 1 && items[0] > this.#capacity) {
@@ -13,11 +13,13 @@ export class Vector {
     }
 
     if (items.length > 1) this.#items = items;
+
+    this.#size = this.#items.length;
   }
 
-  // get size() {
-  //   return this.#items.length;
-  // }
+  get size() {
+    return this.#size;
+  }
 
   get items() {
     return this.#items;
@@ -57,7 +59,7 @@ export class Vector {
       }
     }
 
-    this.size += 1;
+    this.#size += 1;
   }
 
   push(item: any) {
