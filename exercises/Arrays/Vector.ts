@@ -1,3 +1,10 @@
+/**
+ * An automatically resizing vector
+ * it uses an array internally but I take great care not to use array features
+ * for the implementation.
+ * Challenge from: https://github.com/jwasham/coding-interview-university#arrays
+ */
+
 export class Vector {
   #items: any[] = [];
   #capacity: number = 16;
@@ -34,13 +41,13 @@ export class Vector {
   }
 
   insert(index: number, item: any) {
-    if (index > this.#items.length) {
+    if (index < 0 || index > this.#size) {
       throw new Error("Out of bounds");
     }
 
     let shiftValue = null;
 
-    for (let i = index; i <= this.#items.length; i += 1) {
+    for (let i = index; i <= this.#size; i += 1) {
       if (i === index) {
         shiftValue = this.#items[i];
         this.#items[i] = item;
@@ -59,13 +66,30 @@ export class Vector {
   }
 
   push(item: any) {
-    this.insert(this.#items.length, item);
+    this.insert(this.#size, item);
     this.#increaseCapacity();
   }
 
   prepend(item: any) {
     this.insert(0, item);
     this.#increaseCapacity();
+  }
+
+  delete(index: number) {
+    if (index < 0 || index >= this.#size) {
+      throw new Error("Out of bounds");
+    }
+
+    for (let i = index; i < this.#size; i += 1) {
+      if (i === index) this.#items[i] = null;
+
+      if (this.#items[i + 1]) {
+        this.#items[i] = this.#items[i + 1];
+        this.#items[i + 1] = null;
+      }
+    }
+
+    this.#size -= 1;
   }
 
   isEmpty() {

@@ -64,10 +64,11 @@ describe("Vector", () => {
       expect(vec.at(4)).toBe(5);
     });
 
-    it("throws an out of bounds error if the specified index is greater than the size of the vector", () => {
+    it("throws an out of bounds error if the given index is invalid", () => {
       const vec = new Vector(1, 2, 3, 4, 5);
 
       expect(() => vec.at(5)).toThrow("Out of bounds");
+      expect(() => vec.at(-1)).toThrow("Out of bounds");
     });
   });
 
@@ -106,6 +107,13 @@ describe("Vector", () => {
       expect(vec.size).toBe(6);
       expect(vec.at(5)).toBe(6);
       expect(vec.toString()).toBe("[1,2,3,4,5,6]");
+    });
+
+    it("throws an out of bounds error if the given index is invalid", () => {
+      const vec = new Vector(1, 2, 3, 4, 5);
+
+      expect(() => vec.insert(6, 6)).toThrow("Out of bounds");
+      expect(() => vec.insert(-1, -1)).toThrow("Out of bounds");
     });
   });
 
@@ -186,6 +194,26 @@ describe("Vector", () => {
       expect(vec.size).toBe(17);
       expect(vec.at(0)).toBe(0);
       expect(vec.capacity).toBe(32);
+    });
+  });
+
+  describe("#delete", () => {
+    it("removes an item at a given index", () => {
+      const vec = new Vector(1, 2, 3, 4, 5);
+
+      expect(vec.size).toBe(5);
+
+      vec.delete(2);
+
+      expect(vec.size).toBe(4);
+      expect(vec.toString()).toBe("[1,2,4,5,null]");
+    });
+
+    it("throws an out of bound error if the given index is invalid", () => {
+      const vec = new Vector(1, 2, 3, 4, 5);
+
+      expect(() => vec.delete(5)).toThrow("Out of bounds");
+      expect(() => vec.delete(-1)).toThrow("Out of bounds");
     });
   });
 });
