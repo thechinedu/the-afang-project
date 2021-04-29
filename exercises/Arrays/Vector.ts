@@ -21,10 +21,6 @@ export class Vector {
     return this.#size;
   }
 
-  get items() {
-    return this.#items;
-  }
-
   get capacity() {
     return this.#capacity;
   }
