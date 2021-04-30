@@ -209,11 +209,73 @@ describe("Vector", () => {
       expect(vec.toString()).toBe("[1,2,4,5,null]");
     });
 
+    it("reduces the capacity of the vector if the size is less than or equal to one-fourth of the capacity when it is greater than 16", () => {
+      const vec = new Vector(
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      );
+
+      expect(vec.capacity).toBe(32);
+
+      vec.delete(0);
+      vec.delete(0);
+      vec.delete(0);
+      vec.delete(0);
+      vec.delete(0);
+      vec.delete(0);
+      vec.delete(0);
+      vec.delete(0);
+      vec.delete(0);
+
+      expect(vec.capacity).toBe(16);
+    });
+
     it("throws an out of bound error if the given index is invalid", () => {
       const vec = new Vector(1, 2, 3, 4, 5);
 
       expect(() => vec.delete(5)).toThrow("Out of bounds");
       expect(() => vec.delete(-1)).toThrow("Out of bounds");
+    });
+  });
+
+  describe("#pop", () => {
+    it("removes an item from the end of the vector and returns the item", () => {
+      const vec = new Vector(1, 2, 3, 4, 5);
+
+      expect(vec.size).toBe(5);
+
+      const removedItem = vec.pop();
+
+      expect(vec.size).toBe(4);
+      expect(removedItem).toBe(5);
+    });
+  });
+
+  describe("#find", () => {
+    it("searches the vector for an item and returns the first matching index", () => {
+      const vec = new Vector(1, 1, 2, 2, 3, 3, 4, 4, 5, 5);
+
+      expect(vec.find(1)).toBe(0);
+      expect(vec.find(2)).toBe(2);
+      expect(vec.find(3)).toBe(4);
+      expect(vec.find(4)).toBe(6);
+      expect(vec.find(5)).toBe(8);
+      expect(vec.find(6)).toBe(-1);
     });
   });
 });

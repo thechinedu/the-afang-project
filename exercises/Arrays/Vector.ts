@@ -1,7 +1,6 @@
 /**
  * An automatically resizing vector
- * it uses an array internally but I take great care not to use array features
- * for the implementation.
+ * it uses an array internally but with minimal usage of array features.
  * Challenge from: https://github.com/jwasham/coding-interview-university#arrays
  */
 
@@ -41,9 +40,7 @@ export class Vector {
   }
 
   insert(index: number, item: any) {
-    if (index < 0 || index > this.#size) {
-      throw new Error("Out of bounds");
-    }
+    this.#checkValidIndex(index);
 
     let shiftValue = null;
 
@@ -63,16 +60,15 @@ export class Vector {
     }
 
     this.#size += 1;
+    this.#increaseCapacity();
   }
 
   push(item: any) {
     this.insert(this.#size, item);
-    this.#increaseCapacity();
   }
 
   prepend(item: any) {
     this.insert(0, item);
-    this.#increaseCapacity();
   }
 
   delete(index: number) {
@@ -90,6 +86,23 @@ export class Vector {
     }
 
     this.#size -= 1;
+    this.#reduceCapacity();
+  }
+
+  pop() {
+    const removedItem = this.at(this.#size - 1);
+
+    this.delete(this.#size - 1);
+
+    return removedItem;
+  }
+
+  find(item: any) {
+    for (let i = 0; i < this.#size; i += 1) {
+      if (this.#items[i] === item) return i;
+    }
+
+    return -1;
   }
 
   isEmpty() {
@@ -100,17 +113,46 @@ export class Vector {
     return JSON.stringify(this.#items);
   }
 
-  #setCapacity(initializedCapacity: number, actualCapacity: number) {
-    let res = actualCapacity;
+  #setCapacity(
+    size: number,
+    capacity: number,
+    action: "increase" | "decrease" = "increase"
+  ) {
+    let res = capacity;
+    let actions = {
+      increase: () => {
+        while (res < size) res *= 2;
+      },
 
-    while (res < initializedCapacity) res *= 2;
+      decrease: () => {
+        while (Math.round(0.25 * res) >= size) res /= 2;
+      },
+    };
+
+    actions[action]();
 
     this.#capacity = res;
   }
 
   #increaseCapacity() {
-    if (this.size > this.#capacity) {
-      this.#setCapacity(this.size, this.#capacity);
+    if (this.#size > this.#capacity) {
+      this.#setCapacity(this.#size, this.#capacity);
+    }
+  }
+
+  #reduceCapacity() {
+    // If the size is less than or equal to one-fourth of the capacity
+    if (
+      this.#size <= Math.round(0.25 * this.#capacity) &&
+      this.#capacity > 16
+    ) {
+      this.#setCapacity(this.#size, this.#capacity, "decrease");
+    }
+  }
+
+  #checkValidIndex(index: number) {
+    if (index < 0 || index > this.#size) {
+      throw new Error("Out of bounds");
     }
   }
 }
