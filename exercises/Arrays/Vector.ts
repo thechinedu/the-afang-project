@@ -89,6 +89,8 @@ export class Vector {
     this.#reduceCapacity();
   }
 
+  remove(item: any) {}
+
   pop() {
     const removedItem = this.at(this.#size - 1);
 

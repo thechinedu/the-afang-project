@@ -277,5 +277,35 @@ describe("Vector", () => {
       expect(vec.find(5)).toBe(8);
       expect(vec.find(6)).toBe(-1);
     });
+
+    it("returns -1 if an item cannot be found in the vector", () => {
+      const vec = new Vector(1, 2, 3, 4, 5);
+
+      expect(vec.find(6)).toBe(-1);
+    });
+  });
+
+  describe("#remove", () => {
+    it("removes the index holding an item", () => {
+      const vec = new Vector(
+        "Ade",
+        "James",
+        "Steven",
+        "Marybeth",
+        "Gloria",
+        "Emeka"
+      );
+
+      expect(vec.size).toBe(6);
+      expect(vec.find("Marybeth")).toBe(3);
+
+      vec.remove("Marybeth");
+
+      expect(vec.size).toBe(5);
+      expect(vec.find("Marybeth")).toBe(-1);
+      expect(vec.toString()).toBe(
+        '["Ade","James", "Steven","Gloria","Emeka",null]'
+      );
+    });
   });
 });
