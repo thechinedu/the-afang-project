@@ -4,6 +4,8 @@
  * Challenge from: https://github.com/jwasham/coding-interview-university#arrays
  */
 
+const DELETED_ITEM = "<<<(DELETED_VECTOR_ITEM)>>>";
+
 export class Vector {
   #items: any[] = [];
   #capacity: number = 16;
@@ -76,20 +78,28 @@ export class Vector {
       throw new Error("Out of bounds");
     }
 
-    for (let i = index; i < this.#size; i += 1) {
-      if (i === index) this.#items[i] = null;
-
-      if (this.#items[i + 1]) {
-        this.#items[i] = this.#items[i + 1];
-        this.#items[i + 1] = null;
-      }
-    }
+    this.#items[index] = DELETED_ITEM;
+    this.#removeDeletedItems();
 
     this.#size -= 1;
     this.#reduceCapacity();
   }
 
-  remove(item: any) {}
+  remove(item: any) {
+    let removedItemsCount = 0;
+
+    for (let i = 0; i < this.#size; i += 1) {
+      if (this.#items[i] === item) {
+        this.#items[i] = DELETED_ITEM;
+        removedItemsCount += 1;
+      }
+    }
+
+    this.#removeDeletedItems();
+    this.#size -= removedItemsCount;
+
+    this.#reduceCapacity();
+  }
 
   pop() {
     const removedItem = this.at(this.#size - 1);
@@ -156,5 +166,19 @@ export class Vector {
     if (index < 0 || index > this.#size) {
       throw new Error("Out of bounds");
     }
+  }
+
+  #removeDeletedItems() {
+    const newItemState = [];
+    let count = 0;
+
+    for (let i = 0; i < this.#size; i += 1) {
+      if (this.#items[i] !== DELETED_ITEM) {
+        newItemState[count] = this.#items[i];
+        count += 1;
+      }
+    }
+
+    this.#items = newItemState;
   }
 }

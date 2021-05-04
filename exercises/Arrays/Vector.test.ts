@@ -206,7 +206,7 @@ describe("Vector", () => {
       vec.delete(2);
 
       expect(vec.size).toBe(4);
-      expect(vec.toString()).toBe("[1,2,4,5,null]");
+      expect(vec.toString()).toBe("[1,2,4,5]");
     });
 
     it("reduces the capacity of the vector if the size is less than or equal to one-fourth of the capacity when it is greater than 16", () => {
@@ -303,9 +303,64 @@ describe("Vector", () => {
 
       expect(vec.size).toBe(5);
       expect(vec.find("Marybeth")).toBe(-1);
-      expect(vec.toString()).toBe(
-        '["Ade","James", "Steven","Gloria","Emeka",null]'
+      expect(vec.toString()).toBe('["Ade","James","Steven","Gloria","Emeka"]');
+    });
+
+    it("removes all instances of an item", () => {
+      const vec = new Vector(
+        "Marybeth",
+        "Ade",
+        "James",
+        "Steven",
+        "Marybeth",
+        "Gloria",
+        "Emeka",
+        "Marybeth"
       );
+
+      expect(vec.size).toBe(8);
+
+      vec.remove("Marybeth");
+
+      expect(vec.size).toBe(5);
+      expect(vec.find("Marybeth")).toBe(-1);
+      expect(vec.toString()).toBe('["Ade","James","Steven","Gloria","Emeka"]');
+    });
+
+    it("reduces the capacity of the vector if the size is less than or equal to one-fourth of the capacity when it is greater than 16", () => {
+      const vec = new Vector(
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      );
+
+      expect(vec.capacity).toBe(32);
+
+      vec.remove(1);
+      vec.remove(2);
+      vec.remove(3);
+      vec.remove(4);
+      vec.remove(5);
+      vec.remove(6);
+      vec.remove(7);
+      vec.remove(8);
+      vec.remove(9);
+
+      expect(vec.capacity).toBe(16);
     });
   });
 });
