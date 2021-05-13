@@ -4,8 +4,7 @@
  * Challenge from: https://github.com/jwasham/coding-interview-university#arrays
  */
 
-const DELETED_ITEM = "<<<(DELETED_VECTOR_ITEM)>>>";
-
+const DELETED_ITEM = Symbol("<<<(DELETED_VECTOR_ITEM)>>>");
 export class Vector {
   #items: any[] = [];
   #capacity: number = 16;
