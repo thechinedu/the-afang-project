@@ -1,3 +1,5 @@
+import { charFreq } from "./utils/character-frequency";
+
 /**
  * Runtime complexity:
  * O(n) Time
@@ -14,15 +16,4 @@ export const checkPermutation = (value: string, comparedValue: string) => {
   }
 
   return true;
-};
-
-const charFreq = (str: string) => {
-  const res = Object.create(null);
-
-  for (const char of str) {
-    if (res[char]) res[char] += 1;
-    else res[char] = 1;
-  }
-
-  return res;
 };

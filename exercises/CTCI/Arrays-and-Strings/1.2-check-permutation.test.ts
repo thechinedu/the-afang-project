@@ -1,4 +1,4 @@
-import { checkPermutation } from "./checkPermutation";
+import { checkPermutation } from "./1.2-check-permutation";
 
 describe("checkPermutation", () => {
   it.each([

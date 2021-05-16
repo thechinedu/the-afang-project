@@ -1,4 +1,4 @@
-import { hasAllUniqueCharsV1, hasAllUniqueCharsV2 } from "./isUnique";
+import { hasAllUniqueCharsV1, hasAllUniqueCharsV2 } from "./1.1-is-unique";
 
 describe("hasAllUniqueCharsV1", () => {
   it.each([
