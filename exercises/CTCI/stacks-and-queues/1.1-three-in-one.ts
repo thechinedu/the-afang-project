@@ -39,7 +39,7 @@ export class ThreeInOneStack {
   pop() {
     if (this.isEmpty()) throw new Error("Stack is empty. Nothing to pop");
 
-    const item = this.container[this.indices[this.activeStack].start];
+    const item = this.container[this.indices[this.activeStack].start - 1];
 
     this.indices[this.activeStack].start -= 1;
 
@@ -47,7 +47,7 @@ export class ThreeInOneStack {
   }
 
   peek() {
-    return this.container[this.indices[this.activeStack].start];
+    return this.container[this.indices[this.activeStack].start - 1];
   }
 
   isEmpty() {
