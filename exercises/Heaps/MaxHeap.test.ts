@@ -41,4 +41,93 @@ describe("MaxHeap", () => {
       ]);
     });
   });
+
+  describe("max", () => {
+    it("returns the node with the maximum value in the heap", () => {
+      const heap = new MaxHeap();
+      heap.insert(1);
+      heap.insert(10);
+      expect(heap.max).toBe(10);
+
+      heap.insert(8);
+      heap.insert(20);
+      heap.insert(15);
+
+      expect(heap.max).toBe(20);
+    });
+  });
+
+  describe("size", () => {
+    it("returns the size of the heap", () => {
+      const heap = new MaxHeap();
+      heap.insert(1);
+      heap.insert(10);
+      expect(heap.size).toBe(2);
+
+      heap.insert(8);
+      heap.insert(20);
+      heap.insert(15);
+
+      expect(heap.size).toBe(5);
+    });
+  });
+
+  describe("extractMax", () => {
+    it("removes and returns the node with the maximum value in the heap", () => {
+      const heap = new MaxHeap();
+      heap.insert(8);
+      heap.insert(10);
+      expect(heap.max).toBe(10);
+      expect(heap.size).toBe(2);
+
+      expect(heap.extractMax()).toBe(10);
+
+      expect(heap.max).toBe(8);
+      expect(heap.size).toBe(1);
+
+      heap.insert(8);
+      heap.insert(20);
+      heap.insert(15);
+
+      expect(heap.max).toBe(20);
+      expect(heap.size).toBe(4);
+
+      expect(heap.extractMax()).toBe(20);
+
+      expect(heap.max).toBe(15);
+      expect(heap.size).toBe(3);
+    });
+  });
+
+  describe("remove", () => {
+    it("removes the specified node at a given index (one-indexed)", () => {
+      const heap = new MaxHeap();
+      heap.insert(8);
+      heap.insert(10);
+      heap.insert(16);
+      heap.insert(20);
+      heap.insert(15);
+
+      expect(heap.values).toStrictEqual([20, 16, 10, 8, 15]);
+
+      heap.remove(3);
+
+      expect(heap.values).toStrictEqual([20, 16, 15, 8]);
+    });
+  });
+
+  describe("isEmpty", () => {
+    it("returns a boolean indicating if the heap contains elements or not", () => {
+      const heap = new MaxHeap();
+      expect(heap.isEmpty()).toBe(true);
+
+      heap.insert(1);
+      heap.insert(10);
+      heap.insert(8);
+      heap.insert(20);
+      heap.insert(15);
+
+      expect(heap.isEmpty()).toBe(false);
+    });
+  });
 });
