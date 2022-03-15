@@ -23,6 +23,20 @@ export class MaxHeap {
     this.extractMax();
   }
 
+  heapify(elements: number[]): MaxHeap {
+    const ret = new MaxHeap();
+
+    for (const element of elements) {
+      ret.insert(element);
+    }
+
+    return ret;
+  }
+
+  sort(elements: number[], dir = "asc"): number[] {
+    return [];
+  }
+
   isEmpty(): boolean {
     return this.heap.length === 0;
   }

@@ -126,6 +126,62 @@ describe("MaxHeap", () => {
     });
   });
 
+  describe("heapify", () => {
+    it("creates a heap from a given array of elements", () => {
+      const heap = new MaxHeap();
+      const arr = [3, 10, 9, 8, 9, 20, 15, 11, 14];
+      const heapArr = heap.heapify(arr);
+
+      expect(heapArr.values).toStrictEqual([20, 14, 15, 11, 8, 9, 10, 3, 9]);
+    });
+  });
+
+  describe("heapSort", () => {
+    it.each([
+      [
+        [3, 10, 9, 8, 9, 20, 15, 11, 14],
+        [3, 8, 9, 9, 10, 11, 14, 15, 20],
+      ],
+
+      [
+        [4, 3, 1, 4, 5, 9, 10, 11],
+        [1, 3, 4, 4, 5, 9, 10, 11],
+      ],
+
+      [
+        [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      ],
+    ])("sorts a given in ascending order", (given, expected) => {
+      const heap = new MaxHeap();
+      heap.sort(given);
+
+      expect(given).toStrictEqual(expected);
+    });
+
+    it.each([
+      [
+        [3, 10, 9, 8, 9, 20, 15, 11, 14],
+        [20, 15, 14, 11, 10, 9, 9, 8, 3],
+      ],
+
+      [
+        [4, 3, 1, 4, 5, 9, 10, 11],
+        [11, 10, 9, 5, 4, 4, 3, 1],
+      ],
+
+      [
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+      ],
+    ])("sorts a given in descending order", (given, expected) => {
+      const heap = new MaxHeap();
+      heap.sort(given, "desc");
+
+      expect(given).toStrictEqual(expected);
+    });
+  });
+
   describe("isEmpty", () => {
     it("returns a boolean indicating if the heap contains elements or not", () => {
       const heap = new MaxHeap();
