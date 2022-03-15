@@ -107,12 +107,22 @@ describe("MaxHeap", () => {
       heap.insert(16);
       heap.insert(20);
       heap.insert(15);
-
       expect(heap.values).toStrictEqual([20, 16, 10, 8, 15]);
 
       heap.remove(3);
-
       expect(heap.values).toStrictEqual([20, 16, 15, 8]);
+
+      heap.remove(2);
+      expect(heap.values).toStrictEqual([20, 8, 15]);
+
+      heap.remove(3);
+      expect(heap.values).toStrictEqual([20, 8]);
+
+      heap.remove(2);
+      expect(heap.values).toStrictEqual([20]);
+
+      heap.remove(1);
+      expect(heap.values).toStrictEqual([]);
     });
   });
 

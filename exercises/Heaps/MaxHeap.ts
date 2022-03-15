@@ -17,7 +17,11 @@ export class MaxHeap {
     return max;
   }
 
-  remove(): void {}
+  remove(nodePos: number): void {
+    this.changePriority(nodePos, Infinity);
+    this.siftUp(nodePos);
+    this.extractMax();
+  }
 
   isEmpty(): boolean {
     return this.heap.length === 0;
@@ -76,5 +80,9 @@ export class MaxHeap {
       [successorIdx, successorNode] =
         leftChild > rightChild ? [leftIdx, leftChild] : [rightIdx, rightChild];
     }
+  }
+
+  private changePriority(nodePos: number, newPriority: number): void {
+    this.heap[nodePos - 1] = newPriority;
   }
 }
