@@ -152,7 +152,7 @@ describe("MaxHeap", () => {
         [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       ],
-    ])("sorts a given in ascending order", (given, expected) => {
+    ])("sorts a given array in ascending order", (given, expected) => {
       const heap = new MaxHeap();
       heap.sort(given);
 
@@ -174,7 +174,7 @@ describe("MaxHeap", () => {
         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       ],
-    ])("sorts a given in descending order", (given, expected) => {
+    ])("sorts a given array in descending order", (given, expected) => {
       const heap = new MaxHeap();
       heap.sort(given, "desc");
 

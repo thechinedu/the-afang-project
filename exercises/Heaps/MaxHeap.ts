@@ -34,7 +34,15 @@ export class MaxHeap {
   }
 
   sort(elements: number[], dir = "asc"): number[] {
-    return [];
+    const heap = this.heapify(elements);
+    elements.length = 0;
+
+    while (!heap.isEmpty()) {
+      const max = heap.extractMax();
+      elements.push(max);
+    }
+
+    return dir === "asc" ? elements.reverse() : elements;
   }
 
   isEmpty(): boolean {
@@ -71,29 +79,41 @@ export class MaxHeap {
   }
 
   private siftDown(nodePos: number): void {
-    let node = this.heap[nodePos - 1];
-    let leftIdx = nodePos * 2;
-    let rightIdx = nodePos * 2 + 1;
-    let leftChild = this.heap[leftIdx - 1];
-    let rightChild = this.heap[rightIdx - 1];
-
-    let [successorIdx, successorNode] =
-      leftChild > rightChild ? [leftIdx, leftChild] : [rightIdx, rightChild];
-
-    while (node < successorNode) {
-      this.heap[nodePos - 1] = successorNode;
-      this.heap[successorIdx - 1] = node;
-
-      nodePos = successorIdx;
-
+    let node,
+      successorIdx,
+      successorNode,
+      leftIdx,
+      rightIdx,
+      leftChild,
+      rightChild;
+    do {
+      node = this.heap[nodePos - 1];
       leftIdx = nodePos * 2;
-      rightIdx = nodePos * 2 + 1;
+      rightIdx = leftIdx + 1;
+
       leftChild = this.heap[leftIdx - 1];
       rightChild = this.heap[rightIdx - 1];
 
-      [successorIdx, successorNode] =
-        leftChild > rightChild ? [leftIdx, leftChild] : [rightIdx, rightChild];
-    }
+      if (leftChild && rightChild) {
+        [successorIdx, successorNode] =
+          leftChild > rightChild
+            ? [leftIdx, leftChild]
+            : [rightIdx, rightChild];
+      } else if (leftChild) {
+        [successorIdx, successorNode] = [leftIdx, leftChild];
+      } else {
+        [successorIdx, successorNode] = [null, null];
+      }
+
+      if (successorIdx && successorNode && successorNode > node) {
+        this.heap[nodePos - 1] = successorNode;
+        this.heap[successorIdx - 1] = node;
+
+        nodePos = successorIdx;
+      } else {
+        break;
+      }
+    } while (node < successorNode);
   }
 
   private changePriority(nodePos: number, newPriority: number): void {
