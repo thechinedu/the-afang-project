@@ -22,6 +22,30 @@ describe("Insertion Sort", () => {
     expect(given).toStrictEqual(expected);
   });
 
+  it.each([
+    [
+      [3, 10, 9, 8, 9, 20, 15, 11, 14],
+      [20, 15, 14, 11, 10, 9, 9, 8, 3],
+    ],
+
+    [
+      [4, 3, 1, 4, 5, 9, 10, 11],
+      [11, 10, 9, 5, 4, 4, 3, 1],
+    ],
+
+    [
+      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+    ],
+  ])(
+    "sorts a given array in descending order using a compare function",
+    (given, expected) => {
+      sort(given, (a, b) => b - a);
+
+      expect(given).toStrictEqual(expected);
+    }
+  );
+
   it("sorts an array in-place", () => {
     const arr = [3, 10, 9, 8, 9, 20, 15, 11, 14];
     const sorted = sort(arr);
