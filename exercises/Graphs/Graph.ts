@@ -1,7 +1,7 @@
 /**
  * - Represent a graph as an adjacency list
- *   Use an array of arrays to represent the adjacency list
- *   Use an array of linked lists to represent the adjacency list
+ *   Use a map of arrays to represent the adjacency list
+ *   Use a map of linked lists to represent the adjacency list
  *
  * - Represent a graph as an adjacency matrix
  * - Represent a graph as an edge list
@@ -16,6 +16,10 @@
  * Implement BFS with adjacency matrix
  *
  * Implement Dijkstra's algorithm (single-source shortest path)
+ * convert between representations ->
+ *   adjacency list to adjacency matrix and vice versa
+ *   adjacency matrix to edge list and vice versa
+ *   adjacency list to edge list and vice versa
  *
  * Implement minimum spanning tree
  *   check for cycle
@@ -27,33 +31,57 @@
  * CTCI Graph problems
  */
 
-type GraphRepresentationOptions = {
-  type: "adjacencyList" | "adjacencyMatrix" | "edgeList";
-  structure?: "array" | "linkedlist"; // only valid for adjacency list representation
-};
+export enum GraphType {
+  ADJACENCY_LIST = "adjacencyList",
+  ADJACENCY_MATRIX = "adjacencyMatrix",
+  EDGE_LIST = "edgeList",
+}
 
 type GraphConfigOptions = {
   directed: boolean;
   weighted: boolean;
-  representation: GraphRepresentationOptions;
+  type: GraphType;
 };
 
-export class Graph {
+const foo = () => {
+  return 123;
+};
+
+export class Graph<T> {
   config: GraphConfigOptions;
+  graph!: unknown;
 
   constructor(config: GraphConfigOptions) {
     this.config = config;
-    // this.graph = new Map()
+    // this.graph = this.generateGraphStructure(config.type);
   }
 
-  // vertices can contain any value, I'll be sticking with numbers
-  addEdge(vertex: number, vertex2: number, weight = 0) {
-    const operations = {
-      adjacencyList: () => {},
-    };
+  addEdge(sourceVertex: T, neighborVertex: T, weight?: unknown) {
+    if (this.config.type === GraphType.ADJACENCY_MATRIX) {
+      throw new Error("GraphType must be adjacencyList or edgeList");
+    }
+
+    if (this.config.type === GraphType.ADJACENCY_LIST) {
+      this.addAsAdjacencyList(sourceVertex, neighborVertex, weight);
+    }
   }
 
-  private addAsAdjacencyListArr() {}
+  private addAsAdjacencyList(
+    sourceVertex: T,
+    neighborVertex: T,
+    weight?: unknown
+  ): void {
+    if (!this.graph) this.graph = new Map();
+    const graph = this.graph as Map<T, T[]>;
 
-  private addAsAdjacencyLinkedList() {}
+    if (graph.has(sourceVertex)) {
+      const source = graph.get(sourceVertex);
+      source?.push(neighborVertex);
+      return;
+    }
+
+    graph.set(sourceVertex, [neighborVertex]);
+
+    return;
+  }
 }
