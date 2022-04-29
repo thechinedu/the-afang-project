@@ -1,7 +1,6 @@
 /**
  * - Represent a graph as an adjacency list
  *   Use a map of arrays to represent the adjacency list
- *   Use a map of linked lists to represent the adjacency list
  *
  * - Represent a graph as an adjacency matrix
  * - Represent a graph as an edge list
@@ -37,14 +36,12 @@ export enum GraphType {
   EDGE_LIST = "edgeList",
 }
 
+type AdjacencyListGraph<T> = Map<T, { vertex: T; weight: unknown }[]>;
+
 type GraphConfigOptions = {
   directed: boolean;
   weighted: boolean;
   type: GraphType;
-};
-
-const foo = () => {
-  return 123;
 };
 
 export class Graph<T> {
@@ -53,7 +50,6 @@ export class Graph<T> {
 
   constructor(config: GraphConfigOptions) {
     this.config = config;
-    // this.graph = this.generateGraphStructure(config.type);
   }
 
   addEdge(sourceVertex: T, neighborVertex: T, weight?: unknown) {
@@ -61,27 +57,93 @@ export class Graph<T> {
       throw new Error("GraphType must be adjacencyList or edgeList");
     }
 
-    if (this.config.type === GraphType.ADJACENCY_LIST) {
-      this.addAsAdjacencyList(sourceVertex, neighborVertex, weight);
+    const graphTypes = {
+      adjacencyList: () =>
+        this.addAsAdjacencyList(sourceVertex, neighborVertex, weight),
+      edgeList: () => null,
+    };
+
+    graphTypes[this.config.type]();
+  }
+
+  getEdgeWeight(sourceVertex: T, comparisonVertex: T): T {
+    if (this.config.type !== GraphType.ADJACENCY_LIST) {
+      throw new Error("GraphType must be adjacencyList");
     }
+
+    if (!this.config.weighted) {
+      throw new Error("Graph must be weighted");
+    }
+
+    const graph = this.graph as AdjacencyListGraph<T>;
+    const vertexList = graph.get(sourceVertex) || [];
+
+    for (const { vertex, weight } of vertexList) {
+      if (vertex === comparisonVertex) return weight as T;
+    }
+
+    return null as unknown as T;
+  }
+
+  print(): string {
+    const graphTypes = {
+      adjacencyList: () => this.printAdjacencyList(),
+      edgeList: () => "",
+      adjacencyMatrix: () => "",
+    };
+
+    return graphTypes[this.config.type]();
   }
 
   private addAsAdjacencyList(
     sourceVertex: T,
     neighborVertex: T,
-    weight?: unknown
+    weight: unknown = null
   ): void {
+    if (this.config.weighted && !weight) {
+      throw new Error("A weight must be specified for a weighted graph");
+    }
+
     if (!this.graph) this.graph = new Map();
-    const graph = this.graph as Map<T, T[]>;
+    const graph = this.graph as AdjacencyListGraph<T>;
 
     if (graph.has(sourceVertex)) {
       const source = graph.get(sourceVertex);
-      source?.push(neighborVertex);
+      source?.push({ vertex: neighborVertex, weight });
+
+      if (!graph.has(neighborVertex)) {
+        graph.set(neighborVertex, []);
+      }
+
       return;
     }
 
-    graph.set(sourceVertex, [neighborVertex]);
+    graph.set(sourceVertex, [{ vertex: neighborVertex, weight }]);
+
+    this.config.directed
+      ? graph.set(neighborVertex, [])
+      : graph.set(neighborVertex, [{ vertex: sourceVertex, weight }]);
 
     return;
+  }
+
+  private printAdjacencyList(): string {
+    let strRepresentation = "";
+    const graph = this.graph as AdjacencyListGraph<T>;
+
+    for (const [vertex, neighborNodes] of graph.entries()) {
+      let node = `${vertex} -->`;
+      let neighbors = "";
+
+      for (const { vertex: neighborVertex, weight } of neighborNodes) {
+        neighbors += `${
+          weight ? `[${neighborVertex}, ${weight}]` : neighborVertex
+        }, `;
+      }
+      node += ` [${neighbors.replace(/,\s$/, "")}]\n`;
+      strRepresentation += node;
+    }
+
+    return strRepresentation;
   }
 }
