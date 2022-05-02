@@ -44,7 +44,7 @@ type GraphConfigOptions = {
   type: GraphType;
 };
 
-export class Graph<T> {
+export class Graph<T, W = unknown> {
   config: GraphConfigOptions;
   graph!: unknown;
 
@@ -52,7 +52,7 @@ export class Graph<T> {
     this.config = config;
   }
 
-  addEdge(sourceVertex: T, neighborVertex: T, weight?: unknown) {
+  addEdge(sourceVertex: T, neighborVertex: T, weight?: W) {
     if (this.config.type === GraphType.ADJACENCY_MATRIX) {
       throw new Error("GraphType must be adjacencyList or edgeList");
     }
@@ -98,7 +98,7 @@ export class Graph<T> {
   private addAsAdjacencyList(
     sourceVertex: T,
     neighborVertex: T,
-    weight: unknown = null
+    weight?: W
   ): void {
     if (this.config.weighted && !weight) {
       throw new Error("A weight must be specified for a weighted graph");
@@ -108,11 +108,14 @@ export class Graph<T> {
     const graph = this.graph as AdjacencyListGraph<T>;
 
     if (graph.has(sourceVertex)) {
-      const source = graph.get(sourceVertex);
-      source?.push({ vertex: neighborVertex, weight });
+      this.addVertexNeighbor(sourceVertex, neighborVertex, weight);
 
-      if (!graph.has(neighborVertex)) {
-        graph.set(neighborVertex, []);
+      if (graph.has(neighborVertex) && !this.config.directed) {
+        this.addVertexNeighbor(neighborVertex, sourceVertex, weight);
+      } else {
+        this.config.directed
+          ? graph.set(neighborVertex, [])
+          : graph.set(neighborVertex, [{ vertex: sourceVertex, weight }]);
       }
 
       return;
@@ -145,5 +148,11 @@ export class Graph<T> {
     }
 
     return strRepresentation;
+  }
+
+  private addVertexNeighbor(vertex: T, neighbor: T, weight?: W) {
+    const graph = this.graph as AdjacencyListGraph<T>;
+    const source = graph.get(vertex);
+    source?.push({ vertex: neighbor, weight });
   }
 }
