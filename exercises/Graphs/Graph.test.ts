@@ -1,7 +1,7 @@
 import { Graph, GraphType } from "./Graph";
 
 describe("Graph", () => {
-  describe("adjacency list representation", () => {
+  xdescribe("adjacency list representation", () => {
     it("directed and unweighted graph", () => {
       const graph = new Graph<number>({
         directed: true,
@@ -116,6 +116,29 @@ describe("Graph", () => {
       expect(graph.getEdgeWeight(4, 6)).toBe(12);
 
       expect(graph.getEdgeWeight(1, 5)).toBe(null);
+    });
+  });
+
+  describe("adjacency matrix representation", () => {
+    it("directed and unweighted graph", () => {
+      const graph = new Graph<number>({
+        directed: true,
+        weighted: false,
+        type: GraphType.ADJACENCY_MATRIX,
+      });
+
+      graph.initializeMatrix(6);
+
+      graph.addEdge(1, 2);
+      graph.addEdge(1, 4);
+      graph.addEdge(2, 3);
+      graph.addEdge(3, 4);
+      graph.addEdge(4, 5);
+      graph.addEdge(4, 6);
+
+      console.log(graph.print());
+
+      expect(4).toBe(4);
     });
   });
 });

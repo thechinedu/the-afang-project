@@ -47,19 +47,33 @@ type GraphConfigOptions = {
 export class Graph<T, W = unknown> {
   config: GraphConfigOptions;
   graph!: unknown;
+  vertexCount!: number;
 
   constructor(config: GraphConfigOptions) {
     this.config = config;
   }
 
+  initializeMatrix(vertexCount: number) {
+    if (this.config.type !== GraphType.ADJACENCY_MATRIX) {
+      throw new Error("GraphType must be adjacencyMatrix.");
+    }
+    this.vertexCount = vertexCount;
+    const rows = new Array(vertexCount).fill(0);
+    this.graph = new Array(vertexCount).fill(rows);
+    // TODO: set up vertex map (map vertices to their index in the matrix)
+  }
+
   addEdge(sourceVertex: T, neighborVertex: T, weight?: W) {
-    if (this.config.type === GraphType.ADJACENCY_MATRIX) {
-      throw new Error("GraphType must be adjacencyList or edgeList");
+    if (this.config.type === GraphType.ADJACENCY_MATRIX && !this.vertexCount) {
+      throw new Error(
+        "The matrix must first be createed before adding edges. Call initializeMatrix(<vertexCount>)"
+      );
     }
 
     const graphTypes = {
       adjacencyList: () =>
         this.addAsAdjacencyList(sourceVertex, neighborVertex, weight),
+      adjacencyMatrix: () => null,
       edgeList: () => null,
     };
 
@@ -89,7 +103,7 @@ export class Graph<T, W = unknown> {
     const graphTypes = {
       adjacencyList: () => this.printAdjacencyList(),
       edgeList: () => "",
-      adjacencyMatrix: () => "",
+      adjacencyMatrix: () => this.graph as unknown as any,
     };
 
     return graphTypes[this.config.type]();
